@@ -6,7 +6,7 @@ from googleapiclient.discovery import build
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.modify"]
 TOKEN, APPLY, MIN_CONF = "token_modify.json", "--apply" in sys.argv, 0.5
-NAMES = {"JOB_POSITIVE": "JobMail/Positive", "JOB_REJECTION": "JobMail/Rejection", "JOB_OTHER": "JobMail/Other", "REVIEW": "JobMail/Review"}
+NAMES = {"JOB_POSITIVE": "JobMail/Positive", "JOB_REJECTION": "JobMail/Rejection", "JOB_OTHER": "JobMail/Other"}
 
 def clean(t):
     t = re.sub(r"<(style|script).*?</\1>", " ", t, flags=re.S | re.I)
@@ -48,7 +48,7 @@ def get_msg(i):
     raise RuntimeError("too many retries")
 
 model = joblib.load("models/model.joblib")
-q = "in:inbox" if "--all" in sys.argv else "in:inbox newer_than:7d"
+q = "in:inbox" if "--all" in sys.argv else "in:inbox newer_than:14d"
 ids, tok = [], None
 while True:
     r = gm.messages().list(userId="me", q=q, maxResults=100, pageToken=tok).execute()
@@ -64,7 +64,7 @@ for m in ids:
     p = model.predict_proba([subj + " " + clean(body(msg["payload"]))])[0]
     cls, conf = model.classes_[p.argmax()], p.max()
     if cls == "JOB_POSITIVE" and conf < 0.5:
-        cls = "REVIEW"
+        cls = "JOB_OTHER"
     ok = True
     print(f"{cls:14} {conf:.2f} {'LABEL' if ok else 'skip '} | {subj[:60]}")
     if APPLY and ok:

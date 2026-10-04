@@ -18,10 +18,10 @@ def get(i):
             time.sleep(30)
     raise RuntimeError("too many retries")
 n = 0
-for src in ("JobMail/Other", "JobMail/Review"):
+for src in ("JobMail/Other",):
     tok = None
     while True:
-        r = gm.messages().list(userId="me", labelIds=[ids[src]], maxResults=100, pageToken=tok).execute()
+        r = gm.messages().list(userId="me", labelIds=[ids[src]], q="newer_than:14d", maxResults=100, pageToken=tok).execute()
         for m in r.get("messages", []):
             msg = get(m["id"])
             hit = RX.search(re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", html.unescape(text(msg["payload"])))))
