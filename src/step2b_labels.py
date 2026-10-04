@@ -4,8 +4,8 @@ from step4_prepare import clean_text
 
 # Rule labels from the BODY only. Order matters: rejection wins over positive, positive wins over other.
 REJ = re.compile("absage|leider nicht|leider m.ssen|leider haben wir|leider k.nnen|andere[nr]? (bewerber|kandidaten)|nicht weiter ber.cksichtigen|nicht ber.cksichtigen|engere wahl|gegen ihre bewerbung|gegen sie entschieden|entscheidung gegen|vielleicht klappt es|regret to inform|not moving forward|not be moving forward|will not be proceeding|decided to proceed with|not selected|unfortunately.{0,80}(application|position|candidate)", re.I)
-POS = re.compile("invite you to|einladen|einladung zum|interview|vorstellungsgespr|assessment|coding challenge|next step|n.chster schritt|meet and greet|offer letter|job offer|upload your documents|unterlagen hochladen", re.I)
-NEWS = re.compile("unsubscribe|abmelden|webinar|bootcamp|job alert|jobs, die du nicht verpassen", re.I)
+POS = re.compile("invite you to|would like to invite|einladung zum (online|vorstellungs|interview|gespr)|schedule (an?|your) interview|complete your (one.way )?video interview|online.assessment|coding challenge|meet and greet|offer letter|job offer|upload your documents|unterlagen hochladen|vorstellungsgespr.ch", re.I)
+NEWS = re.compile("unsubscribe|abmelden|webinar|bootcamp|coaching|jobbooster|job alert|jobs, die du nicht verpassen|if (your profile|there is a fit|selected|we see)|falls (sie|ihr profil)|sollten wir", re.I)
 
 def rule(body):
     t = clean_text(html.unescape(str(body)))
