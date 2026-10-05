@@ -13,3 +13,9 @@ run.log
 token.json
 models/
 german_preview.txt
+
+.pytest_cache/
+
+token_modify.json
+logs/
+run.log
