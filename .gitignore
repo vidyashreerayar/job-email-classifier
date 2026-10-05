@@ -19,3 +19,6 @@ german_preview.txt
 token_modify.json
 logs/
 run.log
+
+backups/
+logs/
