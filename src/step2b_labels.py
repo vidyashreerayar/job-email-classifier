@@ -13,11 +13,12 @@ def rule(body):
     if POS.search(t) and not NEWS.search(t): return "JOB_POSITIVE"
     return "JOB_OTHER"
 
-for name in ("train", "val", "test"):
-    d = pd.read_csv(f"data/processed/{name}.csv")
-    d["label"] = d.body.map(rule)
-    d[["email_id", "label"]].to_csv(f"data/processed/{name}_labels.csv", index=False)
-    print(name, len(d), d.label.value_counts().to_dict())
-    if name == "train":
-        for lab, g in d.groupby("label"):
-            print(lab, "examples:", list(g.subject.fillna("").str[:45].head(4)))
+if __name__ == "__main__":
+    for name in ("train", "val", "test"):
+        d = pd.read_csv(f"data/processed/{name}.csv")
+        d["label"] = d.body.map(rule)
+        d[["email_id", "label"]].to_csv(f"data/processed/{name}_labels.csv", index=False)
+        print(name, len(d), d.label.value_counts().to_dict())
+        if name == "train":
+            for lab, g in d.groupby("label"):
+                print(lab, "examples:", list(g.subject.fillna("").str[:45].head(4)))

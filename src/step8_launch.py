@@ -3,6 +3,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(ROOT)
 sys.path.insert(0, os.path.join(ROOT, "src"))
 import joblib, pandas as pd
+from step8_monitor import batch_stats
 import step4_prepare  # the custom transformers must be importable for joblib
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -82,5 +83,5 @@ if APPLY:
         gm.messages().modify(userId="me", id=r.email_id, body={"addLabelIds": [have[NAMES[r.label]]]}).execute()
     # Monitoring: keep a small log (ids and labels only, no email content) so drift can be checked later.
     os.makedirs("logs", exist_ok=True)
-    log = df[["email_id", "label", "confidence"]].assign(date=pd.Timestamp.now().date())
-    log.to_csv("logs/predictions.csv", mode="a", header=not os.path.exists("logs/predictions.csv"), index=False)
+    log = batch_stats(df, model).assign(date=pd.Timestamp.now().date())
+    log.to_csv("logs/monitor_log.csv", mode="a", header=not os.path.exists("logs/monitor_log.csv"), index=False)
